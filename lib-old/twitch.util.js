@@ -1,10 +1,8 @@
 /**
-* Implements utilities used by the Twitch SDK
-* @module twitch-sdk
-* @submodule util
-*/
-
-var util = {};
+ * Implements utilities used by the Twitch SDK
+ * @module twitch-sdk
+ * @submodule util
+ */
 
 /**
  * Converts the input object or array into a String for use in a URL.
@@ -13,29 +11,28 @@ var util = {};
  * @param {Object|Array} array
  * @return {String} URL-format parameter
  */
-
-util.param = function(array) {
+function param(array) {
   var i = 0;
   var result = '';
 
-  for (var name in array) {
-    if (i !== 0) {
-      result += '&'
+  for ( var name in array ) {
+    if ( i !== 0 ) {
+      result += '&';
     }
 
-    if (typeof array[name] === 'object') {
+    if( typeof array[name] === 'object' ) {
       var j = 0;
 
-      for (var key in array[name]) {
-        result += `${name}[${key}]=${array[name][key]}`;
-        if (j < Object.keys(array[name]).length - 1) {
+      for( var key in array[name] ) {
+        result += name + '[' + key + ']=' + array[name][key];
+        if( j < Object.keys(array[name]).length-1 ) {
           result += '&';
         }
       }
 
       j++;
     } else {
-      result += `${name}=${array[name]}`;
+      result += name + '=' + array[name];
     }
 
     i++;
@@ -43,6 +40,7 @@ util.param = function(array) {
 
   return result;
 }
+exports.param = param;
 
 /**
  * Parses a hash and creates a session object out of it. This is used when the
@@ -53,27 +51,22 @@ util.param = function(array) {
  * @param {String} hash The hash
  * @return {Object} Session
  */
-
-util.parseFragment = function(hash) {
+function parseFragment(hash) {
   if (!hash) {
-    throw new Error('A "hash" must be specified');
+    throw new Error('A hash must be specified');
   }
 
-  var match;
-  var session;
+  var match,
+    session;
 
   var hashMatch = function(expr) {
     var match = hash.match(expr);
-    return match
-      ? match[1]
-      : null;
-  }
+    return match ? match[1] : null;
+  };
 
   session = {
     token: hashMatch(/access_token=(\w+)/),
-    scope: hashMatch(/scope=([\w+]+)/)
-      ? hashMatch(/scope=([\w+]+)/).split('+')
-      : null,
+    scope: hashMatch(/scope=([\w+]+)/) ? hashMatch(/scope=([\w+]+)/).split('+') : null,
     state: hashMatch(/state=(\w+)/),
     error: hashMatch(/error=(\w+)/),
     errorDescription: hashMatch(/error_description=(\w+)/)
@@ -81,5 +74,4 @@ util.parseFragment = function(hash) {
 
   return session;
 }
-
-module.exports = util;
+exports.parseFragment = parseFragment;
